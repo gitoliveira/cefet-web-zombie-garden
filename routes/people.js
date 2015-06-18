@@ -36,6 +36,7 @@ router.put('/eaten/', function(req, res) {
   });
 });
 
+//insert into person (name, alive, eatenBy) values ("Pedro", 1, null);
 
 /* GET formulario de registro de nova pessoa */
 router.get('/new/', function(req, res) {
@@ -45,8 +46,31 @@ router.get('/new/', function(req, res) {
 
 /* POST registra uma nova pessoa */
 // IMPLEMENTAR AQUI
+router.post('/', function(req, res) {
+  db.query('insert into person (name, alive, eatenBy) values ('+ db.escape(req.body.name) +', 1, null);',
+    function(err, result) {
+      if (result.affectedRows !== 1) {
+        req.flash('error', 'Registro não pode ser realizado.');
+      } else {
+        req.flash('success', 'Registro realizado.');
+      }
+      res.redirect('/');
+  });
+});
+
 
 /* DELETE uma pessoa */
 // IMPLEMENTAR AQUI
+router.delete('/:id', function(req, res) {
+  db.query('delete from person where id = '+ db.escape(req.params.id) +';',
+    function(err, result) {
+      if (result.affectedRows !== 1) {
+        req.flash('error', 'Exclusão não pode ser realizada.');
+      } else {
+        req.flash('success', 'Exclusão realizda.');
+      }
+      res.redirect('/');
+  });
+});
 
 module.exports = router;
